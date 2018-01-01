@@ -21,6 +21,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -49,13 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog dialog;
 
+    LoveDBHelper dbhelper;
+
     //時間變數
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Button button;
+    private ImageButton button;
     private TextView tvDate, tvTime;
     private EditText etClass, etBuilding;
     private ListView listview;
     String testString = "";
+    String GetMain0String = "";
     int brange = 0, bcnt = 0;
 
     //網路變數
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     "國百館",
                     "紡織大樓",
                     "億光大樓",
-                    "化工館",};
+                    "化工館"};
     //陣列中 每一棟的教室上下邊界
     int[] bound = new int[BuildingName.length + 1];
 
@@ -142,22 +147,48 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR); getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
+        dbhelper = new LoveDBHelper(MainActivity.this);
+
         dialog = new ProgressDialog(MainActivity.this);
-        dialog.setMessage("Please wait....");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
 
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvTime = (TextView) findViewById(R.id.tvTime);
         etClass = (EditText) findViewById(R.id.editTextClass);
         etBuilding = (EditText) findViewById(R.id.editTextBuilding);
-        button = (Button) findViewById(R.id.button);
+        button = (ImageButton) findViewById(R.id.button);
         listview = (ListView) findViewById(R.id.listview1);
 
         ShowNowTime();
+
+        GetMain0String = getIntent().getStringExtra("json");
+        bound = getIntent().getIntArrayExtra("json2");
+
+        String[] handleMain0String = GetMain0String.split("!");
+
+        Cobj = new ClassObj[handleMain0String.length];
+
+        for(int i=0; i< handleMain0String.length; i++) {
+            String[] tmp = handleMain0String[i].split("~");
+            Cobj[i] = new ClassObj();
+            Cobj[i].SetBuilding(tmp[0]);
+            Cobj[i].SetName(tmp[1]);
+            Cobj[i].Seturi(tmp[2]);
+            Cobj[i].SetVol(tmp[3]);
+        }
+
+        for (int j = 0; j < BuildingName.length; j++) {
+            if (BuildingName[j].equals("第一教學大樓")) {
+                etBuilding.setText("第一教學大樓");
+                whatBuilding = j;
+                brange = bound[whatBuilding + 1] - (bound[whatBuilding] + 1);
+                etClass.setText("");
+                break;
+            }
+        }
+
+
 
         myBroadcasReceiver = new BroadcastReceiver() {
             @Override
@@ -171,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction("MyMessage3");
         registerReceiver(myBroadcasReceiver, intentFilter);
 
-        new Thread(new GetHTMLData()).start();
+        //new Thread(new GetHTMLData()).start();
 
         tvDate.setOnClickListener(new EditText.OnClickListener() {
             public void onClick(View v) {
@@ -203,14 +234,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
 
-                //Cursor itemCursor = (Cursor) MainActivity.this.listview.getItemAtPosition(position);
-
                 TextView cname = (TextView) view.findViewById(R.id.textView5);
-
+                TextView cdate = (TextView) view.findViewById(R.id.tv1);
+                TextView curl = (TextView) view.findViewById(R.id.tv4);
                 final String CName = cname.getText().toString();
+                final String CDate = cdate.getText().toString();
+                final String CUrl = curl.getText().toString();
 
-                new Thread(new GetHTMLData3(CName)).start();
+                final String[] list_item = {"加入我最愛的空教室","顯示教室詳細課表","帶我去教室"};
+                AlertDialog.Builder dialog_list = new AlertDialog.Builder(MainActivity.this);
+                dialog_list.setTitle("請選擇功能");
+                dialog_list.setItems(list_item, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
+                        switch (list_item[i]) {
+
+                            case "加入我最愛的空教室" :
+                                dbhelper.insertLove(CName,CDate,CUrl);
+                                Intent intent = new Intent(MainActivity.this,Main3Activity.class);
+                                intent.putExtra("json", GetMain0String);
+                                intent.putExtra("json2",bound);
+                                startActivity(intent);
+                                break;
+                            case "顯示教室詳細課表" :
+                                new Thread(new GetHTMLData3(CName)).start();
+                                break;
+                            case "帶我去教室" :
+                                //Intent intent3 = new Intent(MainActivity.this,Main3Activity.class);
+                                //intent3.putExtra("d", "");
+                                //startActivity(intent3);
+                                break;
+                        }
+
+                         //Toast.makeText(MainActivity.this,"你選的是" + list_item[i],Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                dialog_list.show();
 
 
             }
@@ -502,8 +563,11 @@ public class MainActivity extends AppCompatActivity {
 
             //===============
 
-            for(int i=0;i<Cobj.length;i++)
-                Log.d(""+i,Cobj[i].GetBuilding() + "\t\t" + Cobj[i].GetName());
+            for(int i=0;i<Cobj.length;i++) {
+                Log.d("" + i, Cobj[i].GetBuilding() + "\t\t" + Cobj[i].GetName());
+            }
+
+
 
             Log.d("","1234");
 
@@ -531,6 +595,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 SortClassObj();
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+
+                }
 
                 Intent i = new Intent("MyMessage2");
                 //i.putExtra("json", testString);
@@ -695,6 +765,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     messageData += ",沒課";
                 }
+
+                messageData += "," + url;
+
                 Log.d("if", messageData);
 
                 testString += messageData + "\n";
@@ -889,6 +962,7 @@ public class MainActivity extends AppCompatActivity {
             String[] msg3 = new String[messageData.length];
             String[] msg4 = new String[messageData.length];
             String[] msg5 = new String[messageData.length];
+            String[] msg6 = new String[messageData.length];
 
             for (int i = 0; i < messageData.length; i++) {
                 String[] tmp = messageData[i].split(",");
@@ -896,6 +970,7 @@ public class MainActivity extends AppCompatActivity {
                 msg3[i] = tmp[1];
                 msg4[i] = tmp[2];
                 msg5[i] = tmp[3];
+                msg6[i] = tmp[4];
             }
 
 
@@ -1000,7 +1075,7 @@ public class MainActivity extends AppCompatActivity {
                         if ((notnum2 == 0 && num2 < num1) || (notnum2 == 1)) {
 
 
-                            String tmp2, tmp4, tmp5;
+                            String tmp2, tmp4, tmp5, tmp6;
 
                             tmp2 = msg2[i];
                             msg2[i] = msg2[j];
@@ -1014,6 +1089,10 @@ public class MainActivity extends AppCompatActivity {
                             msg5[i] = msg5[j];
                             msg5[j] = tmp5;
 
+                            tmp6 = msg6[i];
+                            msg6[i] = msg6[j];
+                            msg6[j] = tmp6;
+
                         }
 
                     }
@@ -1022,7 +1101,7 @@ public class MainActivity extends AppCompatActivity {
 
             //===============
 
-            final String ID_TITLE = "TITLE", ID_TITLE1 = "TITLE1", ID_TITLE2 = "TITLE2", ID_TITLE3 = "TITLE3";
+            final String ID_TITLE = "TITLE", ID_TITLE1 = "TITLE1", ID_TITLE2 = "TITLE2", ID_TITLE3 = "TITLE3", ID_TITLE4 = "TITLE4";
 
             ArrayList<HashMap<String, String>> myListData = new ArrayList<HashMap<String, String>>();
 
@@ -1034,6 +1113,7 @@ public class MainActivity extends AppCompatActivity {
                 item.put(ID_TITLE1, msg3[i]);
                 item.put(ID_TITLE2, msg4[i]);
                 item.put(ID_TITLE3, msg5[i]);
+                item.put(ID_TITLE4, msg6[i]);
                 myListData.add(item);
             }
 
@@ -1041,8 +1121,8 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this,
                     myListData,
                     R.layout.showclass_listview,
-                    new String[]{ID_TITLE, ID_TITLE1, ID_TITLE2, ID_TITLE3},
-                    new int[]{R.id.textView5, R.id.tv1, R.id.tv2, R.id.tv3})
+                    new String[]{ID_TITLE, ID_TITLE1, ID_TITLE2, ID_TITLE3, ID_TITLE4},
+                    new int[]{R.id.textView5, R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4})
             );
             Log.d("t", "t");
 
@@ -1072,8 +1152,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent2 = new Intent(getApplicationContext(), Main2Activity.class);
             String myJson = intent.getExtras().getString("json");
             intent2.putExtra("d",myJson);
+            intent2.putExtra("json", GetMain0String);
+            intent2.putExtra("json2",bound);
             startActivity(intent2);
         }
+        //ImageView imgview = (ImageView) findViewById(R.id.imageView4);
+        //imgview.setVisibility(View.GONE);
+
         if(dialog.isShowing())
             dialog.dismiss();
     }

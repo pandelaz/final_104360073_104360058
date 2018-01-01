@@ -109,6 +109,11 @@
             android:paddingTop="15dp"
             android:text="電子一乙" />
 
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
         <LinearLayout
             android:id="@+id/l4"
             android:layout_width="match_parent"
