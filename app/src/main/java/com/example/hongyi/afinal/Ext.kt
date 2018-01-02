@@ -19,3 +19,4 @@ fun Context.getLayoutInflater(): LayoutInflater {
 fun View.getLayoutInflater(): LayoutInflater {
     return context.getLayoutInflater()
 }
+

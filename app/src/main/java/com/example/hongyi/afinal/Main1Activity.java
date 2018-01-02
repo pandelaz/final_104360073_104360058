@@ -102,6 +102,7 @@ public class Main1Activity extends AppCompatActivity {
 
     }
 
+
     public void ChangePage(int i) {
 
 

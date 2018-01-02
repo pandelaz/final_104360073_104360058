@@ -26,6 +26,8 @@ class DayFragment : Fragment() {
         recycler.adapter = ClassesAdapter(day, timetable as List<Class>)
     }
 
+
+
     companion object {
         val ARG_DAY = "day"
         val ARG_TIMETABLE = "timetable"

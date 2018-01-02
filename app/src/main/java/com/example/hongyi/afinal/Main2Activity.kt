@@ -19,6 +19,7 @@ class Main2Activity : AppCompatActivity() {
                 object : TypeToken<ArrayList<Class>>() {}.type
         )
 
+
         if (timetable != null && timetable.isNotEmpty()) {
             pager.adapter = DaysPagerAdapter(timetable, supportFragmentManager)
             tabs.setupWithViewPager(pager)

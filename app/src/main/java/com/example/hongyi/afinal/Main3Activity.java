@@ -41,6 +41,7 @@ public class Main3Activity extends AppCompatActivity {
 
     BroadcastReceiver myBroadcasReceiver;
 
+
     ProgressDialog dialog;
 
     LoveDBHelper dbhelper;

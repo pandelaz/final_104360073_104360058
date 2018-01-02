@@ -83,6 +83,7 @@ public class LoveDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+
     public Integer deleteLove(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "DBHepler: deletelove = " + String.valueOf(id));

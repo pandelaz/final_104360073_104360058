@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
         myBroadcasReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
