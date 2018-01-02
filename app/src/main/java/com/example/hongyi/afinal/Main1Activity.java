@@ -128,6 +128,7 @@ public class Main1Activity extends AppCompatActivity {
         final String[] list_item = BuildingName;
         AlertDialog.Builder dialog_list = new AlertDialog.Builder(Main1Activity.this);
         dialog_list.setTitle("請選擇大樓");
+
         dialog_list.setItems(list_item, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

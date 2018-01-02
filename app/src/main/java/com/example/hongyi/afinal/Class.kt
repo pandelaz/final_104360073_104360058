@@ -2,6 +2,7 @@ package com.example.hongyi.afinal
 
 import java.io.Serializable
 
+
 /**
  * A class period in a day
  */

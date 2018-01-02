@@ -80,6 +80,7 @@ public class LoveDBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_URL, url);
 
         db.update(TABLE_NAME, contentValues, COLUMN_ID + " = ? ", new String[] { Integer.toString(id) } );
+
         return true;
     }
 

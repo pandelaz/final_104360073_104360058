@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         Cobj = new ClassObj[handleMain0String.length];
 
         for(int i=0; i< handleMain0String.length; i++) {
+
             String[] tmp = handleMain0String[i].split("~");
             Cobj[i] = new ClassObj();
             Cobj[i].SetBuilding(tmp[0]);

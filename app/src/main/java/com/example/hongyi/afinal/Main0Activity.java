@@ -401,6 +401,7 @@ public class Main0Activity extends AppCompatActivity {
 
         if(intent.getAction().equals("MyMessage")) {
 
+
             unregisterReceiver(myBroadcasReceiver);
             String myJson = intent.getExtras().getString("json");
 
