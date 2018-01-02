@@ -72,23 +72,44 @@ public class MainActivity extends AppCompatActivity {
     //教室變數
     ClassObj[] Cobj;
 
-    String[] BuildingName = new String[]
-            {"第一教學大樓",
-                    "第二教學大樓",
-                    "第三教學大樓",
-                    "第四教學大樓",
-                    "第五教學大樓",
-                    "第六教學大樓",
-                    "綜合科館",
-                    "共同科館",
-                    "設計館",
-                    "土木館",
-                    "光華館",
-                    "科研大樓",
-                    "國百館",
-                    "紡織大樓",
-                    "億光大樓",
-                    "化工館"};
+    String[] BuildingName = new String[] {
+            "第一教學大樓",
+            "第二教學大樓",
+            "第三教學大樓",
+            "第四教學大樓",
+            "第五教學大樓",
+            "第六教學大樓",
+            "綜合科館",
+            "共同科館",
+            "設計館",
+            "土木館",
+            "光華館",
+            "科研大樓",
+            "國百館",
+            "紡織大樓",
+            "億光大樓",
+            "化工館"
+    };
+
+    String[] blatlng = new String[] {
+            "25.043377,121.533875",
+            "25.043367, 121.534492",
+            "25.042956, 121.534484",
+            "25.042963, 121.533907",
+            "25.044042, 121.534398",
+            "25.043714, 121.533862",
+            "25.042728, 121.535827",
+            "25.042515, 121.534428",
+            "25.042542, 121.533562",
+            "25.043427, 121.533205",
+            "25.044397, 121.533338",
+            "25.044168, 121.533824",
+            "25.043768, 121.533434",
+            "25.042126, 121.538276", //紡織大樓經緯度待查詢
+            "25.042126, 121.538276",
+            "25.043382, 121.535119"
+    };
+
     //陣列中 每一棟的教室上下邊界
     int[] bound = new int[BuildingName.length + 1];
 
@@ -258,12 +279,16 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 break;
                             case "顯示教室詳細課表" :
+                                dialog.setMessage("Please wait....");
+                                dialog.setCanceledOnTouchOutside(false);
+                                dialog.show();
                                 new Thread(new GetHTMLData3(CName)).start();
                                 break;
                             case "帶我去教室" :
-                                //Intent intent3 = new Intent(MainActivity.this,Main3Activity.class);
-                                //intent3.putExtra("d", "");
-                                //startActivity(intent3);
+                                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + blatlng[whatBuilding] +  "&mode=w");
+                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                mapIntent.setPackage("com.google.android.apps.maps");
+                                startActivity(mapIntent);
                                 break;
                         }
 
