@@ -11,9 +11,11 @@ class DaysPagerAdapter(val timetable: ArrayList<Class>, fm: FragmentManager) : F
 
     override fun getCount(): Int = 5
 
+
     /**
      * I hardcoded day strings since this is a personal app that won't be shared or translated.
      * Should use resources otherwise.
+     *
      */
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {

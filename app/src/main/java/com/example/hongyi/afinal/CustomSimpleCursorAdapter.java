@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 /**
  * Created by hongyi on 2017/12/13.
+ *
  */
 
 public class CustomSimpleCursorAdapter extends SimpleCursorAdapter {

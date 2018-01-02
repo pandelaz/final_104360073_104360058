@@ -26,6 +26,7 @@ class Main2Activity : AppCompatActivity() {
 
             // Normalize day value - our adapter works with five days, the first day (0) being Monday.
             val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 2
+
             pager.currentItem = if (today in 0..4) today else 0
         }
     }

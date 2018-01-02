@@ -9,6 +9,7 @@ import com.example.hongyi.afinal.Class
 import com.example.hongyi.afinal.TimeUtils
 import com.example.hongyi.afinal.getLayoutInflater
 
+
 class ClassesAdapter(val day: Int, classes: List<Class>) : RecyclerView.Adapter<ClassesAdapter.ViewHolder>() {
     /**
      * Filtered list with only the classes for the given day
