@@ -362,7 +362,11 @@ public class MainActivity extends AppCompatActivity {
                 new TimePickerDialog.OnTimeSetListener() {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         // 完成選擇，顯示時間
-                        tvTime.setText(hourOfDay + ":" + minute);
+                        if(hourOfDay<=8) hourOfDay = 8;
+                        if(hourOfDay>=22) hourOfDay = 22;
+                        String hd = (hourOfDay<10) ? ("0" + hourOfDay) : String.valueOf(hourOfDay);
+                        String ht = (minute<10) ? ("0" + minute) : String.valueOf(minute);
+                        tvTime.setText(hd + ":" + ht);
                     }
                 }, mHour, mMinute, false);
         tpd.show();

@@ -13,7 +13,7 @@ class Main2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         //setSupportActionBar(toolbar)
-        //assets.open("timetable.json")
+        //val tmp = assets.open("timetable.json").toString()
         val timetable = Gson().fromJson<ArrayList<Class>>(
                 intent.getStringExtra("d"),
                 object : TypeToken<ArrayList<Class>>() {}.type

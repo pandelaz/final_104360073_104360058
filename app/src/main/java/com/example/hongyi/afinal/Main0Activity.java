@@ -369,7 +369,7 @@ public class Main0Activity extends AppCompatActivity {
 
         public void run() {
             try {
-                Document doc = Jsoup.connect(Baseuri + "Croom.jsp?format=-2&year=106&sem=2").get();
+                Document doc = Jsoup.connect(Baseuri + "Croom.jsp?format=-2&year=106&sem=1").get();
                 Elements row = doc.select("tr");
 
                 Cobj = new ClassObj[row.size() - 2];
